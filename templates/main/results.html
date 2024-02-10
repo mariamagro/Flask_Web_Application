@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <section class="section">
+
+    <div class="search-description">
+      <p>Find your favorite recipes:</p>
+    </div>
+
+    <!-- create the search container -->
+    <div class="search-container">
+      <div class="search-input-container">
+        <input type="text" class="input-text" placeholder="Search..." name="q" id="searchInput">
+        <button class="search-button">Search</button>
+      </div>
+    </div>
+    <!-- create the search container -->
+    
+  </section>
+
+  <!-- display of results start -->
+  <div id="results">
+    {% include 'main/search_results.html'%}
+  </div>
+  <!-- display of results end -->
+
+{% endblock %}
+

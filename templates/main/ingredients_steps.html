@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div id="ingredients-steps-container">
+
+        <input type="hidden" id="recipeId" name="recipe_id" value="{{ recipe.id }}">
+
+        <h2 class="centered-title">Adding Ingredients and Steps</h2>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="notification2">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- initial details of the recipe start -->
+        <div class="recipe-details">
+            <p><b>Title:</b> {{ recipe.title }}</p>
+            <p><b>Number of Servings:</b> {{ recipe.number_persons }}</p>
+            <p><b>Description:</b> {{ recipe.description }}</p>
+            <p><b>Cooking Time:</b> {{ recipe.cooking_time }} {{ recipe.time_unit }} </p>
+        </div>
+        <!-- initial details of the recipe end -->
+
+
+        <!-- start inserting the ingredients of the recipe -->
+        <form action="{{ url_for('main.add_ingredient', recipe_id=recipe.id) }}" method="post" class="ingredient-form">
+            
+            <!-- ingredient name -->
+            <label>Select an ingredient:</label>
+            <input type="text" id="ingredient" name="ingredient" list="ingredients" autocomplete="off" required>
+            <datalist id="ingredients">
+                {% for existing_ingredient in ingredients %}
+                    <option value="{{ existing_ingredient.name }}">
+                {% endfor %}
+            </datalist>
+            <!-- ingredient name -->
+
+            <!-- ingredient quantity -->
+            <label>Select a quantity:</label>
+            <input type="text" id="quantity" name="quantity" list="quantities" required>
+            
+            <!-- ingredient quantity -->
+
+            <!-- ingredient quantity unit -->
+            <label>Select a unit:</label>
+            <input type="text" id="unit" name="unit" list="units">
+            <!-- ingredient quantity unit -->
+
+            <!-- submit the ingredient -->
+            <button type="submit">Submit Ingredient</button>
+            <!-- submit the ingredient -->
+
+        </form>
+        <!-- end inserting the ingredients of the recipe -->
+
+
+
+        <!-- display of ingredients start -->
+        <p class="ingredients-title">Ingredients:</p>
+        <ol class="ingredients-list">
+            {% for q_ingredient in recipe.q_ingredients %}
+                <li>
+                    {% if q_ingredient.units is none %}
+                        {{ q_ingredient.ingredient.name }} {{ q_ingredient.quantity }}
+                    {% else %}
+                        {{ q_ingredient.ingredient.name }} {{ q_ingredient.quantity }} {{ q_ingredient.units }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+        <!-- display of ingredients end -->
+
+
+
+        <!-- start inserting the steps of the recipe -->
+        <form action="{{ url_for('main.add_step', recipe_id=recipe.id) }}" method="post" class="step-form">
+            <label>Write the order:</label>
+            <input type="text" id="position" name="position" list="positions">
+            
+
+            <label>Write the step:</label>
+            <input type="text" id="text" name="text" list="texts">
+
+            <button type="submit">Submit step</button>
+        </form>
+        <!-- end inserting the steps of the recipe -->
+
+
+        
+        <!-- display of steps start -->
+        <p class="steps-title">Steps:</p>
+        <ul class="steps-list">
+            {% for step in recipe.steps | sort(attribute='position') %}
+                <li>{{ step.position }}. {{ step.text }}</li>
+            {% endfor %}
+        </ul>
+        <!-- display of steps end -->
+
+        
+
+        <!-- allow the user to upload photos -->
+        <p class="photos-title">Photos:</p>
+        <form action="{{ url_for('main.photos_create_recipe', recipe_id=recipe.id) }}" method="post" enctype="multipart/form-data" class="photo-form">
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/jpg" required>
+            <input type="hidden" name="recipe_id" value="{{recipe.id}}">
+            <button type="submit">Upload photo</button>
+        </form>
+        <!-- allow the user to upload photos -->
+
+   
+
+        <!-- display the photos start-->
+        {% if recipe.photos %}
+            <div class="photos-container">
+                {% for photo in recipe.photos %}
+                    <div class="photo-container">
+                        <img src="{{ url_for('static', filename='photos/photo-' ~ photo.id ~ '.' ~ photo.file_extension) }}" alt="photo" class="image-form">
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- display the photos end-->
+        
+
+
+        <!-- button to submit the whole recipe -->
+        <a href="{{ url_for('main.recipe_done', recipe_id=recipe.id) }}" class="done-link">
+            <button type="submit">Done with the recipe!</button>
+        </a>
+        <!-- button to submit the whole recipe -->
+
+{% endblock %}
+

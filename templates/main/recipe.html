@@ -1,0 +1,183 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- first content block -->
+    <div class="recipe-container">
+
+        <div class="recipe">
+
+            <h1 class="recipe-title">{{ recipe.title }}</h1>
+
+
+
+            <!-- display of ratings start -->
+            <div class="ratings">
+                <form id="ratingForm" action="{{ url_for('main.rate_recipe', recipe_id=recipe.id) }}" method="post">
+                    <input type="hidden" id="recipeId" name="recipe_id" value="{{ recipe.id }}">
+                    <input type="hidden" id="userId" name="user_id" value="{{ current_user.id }}">
+                    <input type="hidden" id="rating" name="rating" value="">
+                    <div class="rating">
+                        {% for i in range(1, 6) %}
+                            <button class="star" data-rating="{{ i }}">&#9733</button>
+                        {% endfor %}
+                        <p id="averageRating"> ( {{ average_ratings[recipe.id] }} ) </p>
+                    </div>
+                    <p class="number-ratings"> {{ number_ratings[recipe.id] }} review(s) </p>
+                    
+                </form>
+            </div>
+            <!-- display of ratings end -->
+            
+
+
+            <!-- display of bookmarks start -->
+            <div class="bookmarks">
+                <form action="{{ url_for('main.bookmarks_view', recipe_id=recipe.id) }}" method="post">
+                    <input type="hidden" id="recipeId" name="recipe_id" value="{{ recipe.id }}">
+                    <input type="hidden" id="userId" name="user_id" value="{{ current_user.id }}">
+                    <input type="hidden" id="bookmark" name="bookmark" value="">
+                    <button class="bookmark" data-auth="{{ current_user.is_authenticated }}"></button>
+                </form>
+            </div>
+            <!-- display of bookmarks end -->
+
+
+
+            <!-- display of initial text starts -->
+
+            <div class="recipe-meta">
+                <p>{{ recipe.number_persons }} servings | Cooking Time: {{ recipe.cooking_time }} {{ recipe.time_unit }} </p>
+            </div>
+
+            <div class="recipe-author">
+                <p>By <a href="{{ url_for('main.user_view', user_id=recipe.user.id) }}" method="post">{{ recipe.user.name }}</a></p>
+            </div>
+
+            <div class="recipe-description">
+                <p>{{ recipe.description }}</p>
+            </div>
+
+            <!-- display of initial text ends -->
+
+
+
+            <!-- display images published by the author of the recipe starts -->
+            <div class="photo-gallery">
+                <div class="gal">
+                    {% for photo in recipe.photos if photo.user.id == recipe.user.id %}
+                        <div class="container-photo2">
+                            <img src="{{ url_for('static', filename='photos/photo-' ~ photo.id ~ '.' ~ photo.file_extension) }}" alt="photo" class="photo" onclick="openGallery(this)">
+                        </div>
+                        <div id="gallery" class="gallery">
+                            <span class="close" onclick="closeGallery()">&times;</span>
+                            <div class="image-counter" id="image-counter"></div>
+                            <img class="modal-content" id="image-gallery">
+                            <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+                            <a class="next" onclick="changeImage(1)">&#10095;</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- display images published by the author of the recipe ends -->
+
+        </div>
+
+    </div>
+    <!-- first content block -->
+
+
+
+    <!-- second content block -->
+    <div class="recipe-container">
+
+        <div class="ingredients">
+
+            <h2 class="section-title">Ingredients</h2>
+            
+            <!-- display of the ingredients start -->
+            <ul>
+                {% for q_ingredient in recipe.q_ingredients %}
+                    <li class="ingredient"> {{ q_ingredient.quantity }} {{ q_ingredient.units }} {{ q_ingredient.ingredient.name }}</li>
+                {% endfor %}
+            </ul>
+            <!-- display of the ingredients end -->
+
+        </div>
+
+    </div>
+    <!-- second content block -->
+
+
+
+    <!-- third content block -->
+    <div class="recipe-container">
+
+        <div class="recipe-steps">
+
+            <h2 class="section-title">Steps</h2>
+
+            <!-- display of steps start -->
+            <ol class="blue-circles">
+                {% for step in recipe.steps %}
+                    <li class="step">{{ step.text }}</li>
+                {% endfor %}
+            </ol>
+            <!-- display of steps end-->
+
+        </div>
+
+    </div>
+    <!-- third content block -->
+
+
+
+    <!-- fourth content block -->
+    <div class="recipe-container">
+
+        <div class="photo-gallery">
+
+            <h2 class="section-title">Photos</h2>
+
+            <!-- allow the users to upload photos -->
+            <form id="upload-form" action="{{ url_for('main.photos', recipe_id=recipe.id) }}" method="post" enctype="multipart/form-data" class="upload-form">
+                <label for="file-input" class="upload-button" onclick="photoInput()">
+                    &plus;
+                    <input type="file" id="file-input" name="photo" accept="image/jpeg,image/png,image/jpg" style="display: none;" >
+                </label>
+                <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+            </form>
+            <!-- allow the users to upload photos -->
+
+
+
+
+            <!-- display images published by other users -->
+            <div class="photo-wrapper">
+                {% for photo in recipe.photos if photo.user.id != recipe.user.id %}
+                    <div class="container-photo">
+                        <p class="photo-title">Photo by <a href="{{ url_for('main.user_view', user_id=photo.user.id) }}" method="post">{{ photo.user.name }}</a></p>
+                        <img src="{{ url_for('static', filename='photos/photo-' ~ photo.id ~ '.' ~ photo.file_extension) }}" alt="photo" class="photo" onclick="openGallery(this)">
+                        <div id="gallery" class="gallery">
+                            <span class="close" onclick="closeGallery()">&times;</span>
+                            <div class="image-counter" id="image-counter"></div>
+                            <img class="modal-content" id="image-gallery">
+                            <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+                            <a class="next" onclick="changeImage(1)">&#10095;</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- display images published by other users -->
+    
+        </div>
+
+    </div>
+    <!-- fourth content block -->
+   
+    
+{% endblock %}
+

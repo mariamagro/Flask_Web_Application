@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <input type="hidden" id="userId" name="user_id" value="{{ user.id}}">
+    <!-- first profile container -->
+    <div class="profile-container">
+
+        <div class="profile">
+
+            <div class="images">
+
+                <!-- display the background picture-->
+                {% if user.background_photos %}
+                    {% set latest_background_photo = user.background_photos[-1] %}
+                    <div class="profilepic1">
+                        <img class="image1" src="{{ url_for('static', filename='background_photos/photo-' ~ latest_background_photo.id ~ '.' ~ latest_background_photo.file_extension) }}" alt="" />
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.id == user.id %}
+                                <div class="profilepic-content1" onclick="triggerFileInput('background')">
+                                    <span class="profilepic-icon1"><i class="fas fa-camera"></i></span>
+                                    <span class="profilepic-text1">Edit Background Photo</span>
+                                </div>
+                                <form action="{{ url_for('main.upload_background_image') }}" method="post" enctype="multipart/form-data" class="photo-form" id="background-photo-form">
+                                    <input id="background-photo-input" type="file" name="background_photo" accept="image/jpeg,image/png,image/jpg" required style="display: none;" onchange="uploadBackgroundPhoto()">
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>  
+                {% else %}
+                    <div class="profilepic1">
+                        <img class="image1" src="{{ url_for('static', filename='back.jpg') }}" alt=""/>
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.id == user.id %}
+                                <div class="profilepic-content1" onclick="triggerFileInput('background')">
+                                    <span class="profilepic-icon1"><i class="fas fa-camera"></i></span>
+                                    <span class="profilepic-text1">Edit Background Photo</span>
+                                </div>
+                                <form action="{{ url_for('main.upload_background_image') }}" method="post" enctype="multipart/form-data" class="photo-form" id="background-photo-form">
+                                    <input id="background-photo-input" type="file" name="background_photo" accept="image/jpeg,image/png,image/jpg" required style="display: none;" onchange="uploadBackgroundPhoto()">
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>  
+                {% endif %}
+                <!-- display the background picture-->
+
+
+
+                <!-- display the profile picture-->
+                {% if user.profile_photos %}
+                    {% set latest_profile_photo = user.profile_photos[-1] %}
+                    <div class="profilepic2">
+                        <img class="image2" src="{{ url_for('static', filename='profile_photos/photo-' ~ latest_profile_photo.id ~ '.' ~ latest_profile_photo.file_extension) }}" alt="" />
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.id == user.id %}
+                                <div class="profilepic-content2" onclick="triggerFileInput('profile')">
+                                    <span class="profilepic-icon2"><i class="fas fa-camera"></i></span>
+                                    <span class="profilepic-text2">Edit Profile Photo</span>
+                                </div>
+                                <form action="{{ url_for('main.upload_profile_image') }}" method="post" enctype="multipart/form-data" class="photo-form" id="profile-photo-form">
+                                    <input id="profile-photo-input" type="file" name="profile_photo" accept="image/jpeg,image/png,image/jpg" required style="display: none;" onchange="uploadProfilePhoto()">
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>                    
+                {% else %}
+                    <div class="profilepic2">
+                        <img class="image2"  src="{{ url_for('static', filename='profile.jpg') }}" alt="" />
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.id == user.id %}
+                                <div class="profilepic-content2" onclick="triggerFileInput('profile')">
+                                    <span class="profilepic-icon2"><i class="fas fa-camera"></i></span>
+                                    <span class="profilepic-text2">Edit Profile Photo</span>
+                                </div>
+                                <form action="{{ url_for('main.upload_profile_image') }}" method="post" enctype="multipart/form-data" class="photo-form" id="profile-photo-form">
+                                    <input id="profile-photo-input" type="file" name="profile_photo" accept="image/jpeg,image/png,image/jpg" required style="display: none;" onchange="uploadProfilePhoto()">
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <!-- display the profile picture-->
+
+            </div>
+    
+
+
+            <!-- profile text -->
+            <div class="user-profile">
+                <p class="user-name">{{ user.name }}</p>
+                <p class="recipe-creator">Recipe Creator</p>
+            </div>
+            <!-- profile text -->
+
+
+
+            <!-- profile buttons -->
+            <div class="sections">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.id == user.id %}
+                        <div>
+                            <a href="{{ url_for('main.user_view', user_id=user.id)}}" class="btn1">Main</a>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('main.bookmarks')}}" class="btn1">Bookmarks</a>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('main.view_user_rated_recipes')}}" class="btn3">View Rated Recipes</a>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('main.create_recipe_view') }}" class="btn2">Add recipe!</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <!-- profile buttons -->
+
+        </div>
+        
+    </div>
+    <!-- first profile container -->
+
+    <div class="profile-container">
+        <div class="user-profile-title">
+            Rated Recipes
+        </div>
+    
+        {% if not rated_recipes %}
+            <p class="rate-text">No rated recipes to display.</p>
+        {% endif %}
+    
+        <!-- display the rated recipes -->
+        <div class="recipes">
+    
+            {% if rated_recipes %}
+                {% for recipe in rated_recipes %}
+                    {% include 'main/recipes_display.html' %}
+                {% endfor %}
+            {% endif %}
+    
+        </div>
+    
+
+    
+{% endblock %}

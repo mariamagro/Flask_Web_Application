@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="top">
+
+        Recipes
+
+        <a href="{{ url_for('main.create_recipe_view') }}">
+            <button type="submit">Add a recipe!</button>
+        </a>
+
+    </div>
+
+    <div class="recipes">
+
+        {% for recipe in recipes %}
+            {% include 'main/recipes_display.html' %}
+        {% endfor %}
+        
+    </div>
+
+    
+    <div class="pagination">
+        {% if prev_url %}
+            <a href="{{ prev_url }}">&laquo; Previous</a>
+        {% endif %}
+        
+        
+        {% if next_url %}
+            <a href="{{ next_url }}">Next &raquo;</a>
+        {% endif %}
+    </div>
+
+{% endblock %}
