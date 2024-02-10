@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="body">
+        <div class="container">
+            <div class="cover-image">
+                <div class="front-image">
+                    <img class="image" src="{{ url_for('static', filename='portada-signup.jpg') }}" alt="signup-image">
+                    <div class="front-text">
+                        <span class="text1">Welcome to the cooking world!</span>
+                        <span class="text2">Start your cooking career with us</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-login">
+                <div class="content">
+                    <div class="login">
+                        <div class="title-login">Signup</div>
+                        <form action="{{ url_for('auth.signup_post') }}" method="post">
+                            <div class="boxes">
+                                <div class="box">
+                                    <span class="material-symbols-outlined">email</span>
+                                    <input type="email" name="email" placeholder="Enter your email" required>
+                                </div>
+                                <div class="box">
+                                    <span class="material-symbols-outlined">person</span>
+                                    <input type="text" name="username" placeholder="Enter your username" required>
+                                </div>
+                                <div class="box">
+                                    <span class="material-symbols-outlined">lock</span>
+                                    <input type="password" name="password" placeholder="Enter your password" required>
+                                </div>
+                                <div class="box">
+                                    <span class="material-symbols-outlined">lock</span>
+                                    <input type="password" name="password_repeat" placeholder="Repeat your password" required>
+                                </div>
+                                
+                                <div class="button register-button">
+                                    <input type="submit" value="Register">
+                                </div>
+                                <div class="text sign-up-text">Already have an account? <a href="{{ url_for('auth.login') }}">Login now</a></div>
+                                {% with messages = get_flashed_messages() %}
+                                    {% for message in messages %}
+                                        <div class="notification">{{ message }}</div>
+                                    {% endfor %}
+                                {% endwith %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}
+
