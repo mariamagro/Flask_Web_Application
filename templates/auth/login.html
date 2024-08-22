@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="body">
+        <div class="container">
+            <div class="cover-image">
+                <div class="front-image">
+                    <img class="image" src="{{ url_for('static', filename='portada-login.jpg') }}" alt="login-image">
+                    <div class="front-text">
+                        <span class="text1">No one is born a cook, <br> one learns by doing</span>
+                        <span class="text2">Start your cooking journey</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-login">
+                <div class="content">
+                    <div class="login">
+                        <div class="title-login">Login</div>
+                        <form action="{{ url_for('auth.login_post') }}" method="post">
+                            <div class="boxes">
+                                <div class="box">
+                                    <span class="material-symbols-outlined">email</span>
+                                    <input type="email" name="email" placeholder="Enter your email" required>
+                                </div>
+                                <div class="box">
+                                    <span class="material-symbols-outlined">lock</span>
+                                    <input type="password" name="password" placeholder="Enter your password" required>
+                                </div>
+                                
+                                <div class="button input-button">
+                                    <input type="submit" value="Login">
+                                </div>
+                                <div class="text sign-up-text">Don't have an account? <a href="{{ url_for('auth.signup') }}">Sigup now</a></div>
+                                <div class="message">
+                                    {% with messages = get_flashed_messages() %}
+                                        {% for message in messages %}
+                                            <div class="notification">{{ message }}</div>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                                
+                            </div>                            
+                            
+                        </form>
+               
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+    </div>
+    
+    
+{% endblock %}

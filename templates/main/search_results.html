@@ -1,0 +1,38 @@
+<div class="recipes">
+    {% for recipe in results %}
+        <div class="recipe">
+
+            <!-- photo display starts -->
+            {% if recipe.photos %}
+                <a href="{{ url_for('main.recipe_view', recipe_id=recipe.id) }}"> 
+                    <div class="photo-gallery">
+                        {% for photo in recipe.photos %}
+                            {% if loop.first and photo.user == recipe.user %}
+                                <div class="container-search">
+                                    <img src="{{ url_for('static', filename='photos/photo-' ~ photo.id ~ '.' ~ photo.file_extension) }}" alt="photo" class="photo-index">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </a>
+            {% endif %}
+            <!-- photo display ends-->
+
+            
+
+            <!-- text starts -->
+            <div class="text">
+                <a href="{{ url_for('main.recipe_view', recipe_id=recipe.id) }}" method="post" class="title">
+                    {{ recipe.title }}
+                    <a href="{{ url_for('main.user_view', user_id=recipe.user.id) }}" method="post" class="username"> @{{ recipe.user.name }} </a>
+                </a>
+                <p class="cooking_time"><b>Cooking Time:</b> {{ recipe.cooking_time }} {{ recipe.time_unit }} </p>
+                <p class="people"><b>Servings:</b> {{ recipe.number_persons }}</p>
+                <p class="description"><b>Description:</b> {{ recipe.description }}</p>
+            </div>
+
+            <!-- text ends -->
+
+        </div>
+    {% endfor %}
+</div>

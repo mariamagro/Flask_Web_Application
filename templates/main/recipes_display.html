@@ -1,0 +1,95 @@
+
+
+
+<!-- content of the recipes start -->
+
+<div class="recipe">
+
+    <!-- photo display starts -->
+    {% if recipe.photos %}
+        <a href="{{ url_for('main.recipe_view', recipe_id=recipe.id) }}"> 
+            <div class="photo-gallery">
+                {% for photo in recipe.photos %}
+                    {% if loop.first and photo.user == recipe.user %}
+                        <div class="photo-container">
+                            <img src="{{ url_for('static', filename='photos/photo-' ~ photo.id ~ '.' ~ photo.file_extension) }}" alt="photo" class="photo-index">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </a>
+    {% else %}
+        <a href="{{ url_for('main.recipe_view', recipe_id=recipe.id) }}">
+            <div class="photo-container">
+                <img src="{{ url_for('static', filename='no-photo-recipe.jpg') }}" alt="photo" class="photo-index">
+            </div>
+        </a>
+    {% endif %}
+    <!-- photo display ends-->
+
+    
+
+    <!-- text starts -->
+    <div class="text">
+        <div class = "card-title">
+            <a href="{{ url_for('main.recipe_view', recipe_id=recipe.id) }}" method="post" class="title">
+                {% if recipe.title|length > 50 %}
+                    {{ recipe.title[:50] }}... <!-- Display first 20 characters and add ellipsis -->
+                {% else %}
+                    {{ recipe.title }}
+                {% endif %}
+            </a>
+        </div>
+        <a href="{{ url_for('main.user_view', user_id=recipe.user.id) }}" method="post" class="username"> @{{ recipe.user.name }} </a>
+    <p class="cooking_time"><b>Cooking Time:</b> {{ recipe.cooking_time }} {{ recipe.time_unit }} </p>
+    <p class="people"><b>Servings:</b> {{ recipe.number_persons }}</p>
+    <p class="description">
+        <b>Description:</b>
+        {% if recipe.description|length > 50 %}
+            {{ recipe.description[:50] }}... <!-- Display first 100 characters and add ... -->
+        {% else %}
+            {{ recipe.description }}
+        {% endif %}
+    </p>
+    </div>
+
+    <!-- text ends -->
+
+
+
+    <!-- ratings start -->
+    <div class="ratings">
+        <form id="ratingForm" action="{{ url_for('main.rate_recipe', recipe_id=recipe.id) }}" method="post">
+            <input type="hidden" id="recipeId" name="recipe_id" value="{{ recipe.id }}">
+            <input type="hidden" id="userId" name="user_id" value="{{ current_user.id }}">
+            <!-- Hidden input for rating value -->
+            <input type="hidden" id="rating" name="rating" value="">
+            <div class="rating">
+                {% for i in range(1, 6) %}
+                    <button class="star" data-rating="{{ i }}">&#9733</button>
+                {% endfor %}
+                <p id="averageRating"> ( {{ average_ratings[recipe.id] }} )</p>
+            </div>
+            <p class="number-ratings">  {{ number_ratings[recipe.id] }} review(s) </p>
+        </form>
+    </div>
+    <!-- ratings end -->
+ 
+
+
+    <!-- bookmarks start -->
+    <div class="bookmarks">
+        <form action="{{ url_for('main.bookmarks_view', recipe_id=recipe.id) }}" method="post">
+            <input type="hidden" id="recipeId" name="recipe_id" value="{{ recipe.id }}">
+            <input type="hidden" id="userId" name="user_id" value="{{ current_user.id }}">
+            <!-- Hidden input for rating value -->
+            <input type="hidden" id="bookmark" name="bookmark" value="">
+            <button class="bookmark" data-auth="{{ current_user.is_authenticated }}"></button>
+        </form>
+    </div>
+    <!-- bookmarks end -->
+    
+</div>
+
+<!-- contents of the recipes end -->
+

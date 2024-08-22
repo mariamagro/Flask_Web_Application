@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="recipe-form-title-container">
+        <h1>Recipe Creation</h1>
+    </div>
+    
+    <!-- obtain initial values when adding a recipe -->
+    <form class="recipe-form" action="{{ url_for('main.create_recipe_view') }}" method="post">
+        <div>
+            <label>Title: <input type="title" name="title" required/></label>
+        </div>
+        <div>
+            <label>Number of servings: <input type="text" name="people" required/></label>
+        </div>
+        
+        <div>
+            <label>Cooking time: <input type="text" name="time" required/></label>
+        </div>
+        
+        <div>
+            <label>Unit of time: <input type="text" name="unit" required/></label>
+        </div>
+        <div>
+            <label>Description: <input type="text" name="description" required/></label>
+        </div>
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="notification2">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        <!-- button that adds these values -->
+        <div>
+            <input type="submit" value="Add"/>
+        </div>
+        <!-- button that adds these values -->
+
+    </form>
+    <!-- obtain initial values when adding a recipe -->
+
+{% endblock %}
